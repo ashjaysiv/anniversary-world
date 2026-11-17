@@ -2,7 +2,7 @@
 import * as THREE from 'three'
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { DEG, clamp, easeOutBack, pt, facing, yawToward } from './geo'
+import { DEG, R, clamp, easeOutBack, pt, facing, yawToward } from './geo'
 import { CHAPTERS, DEFAULT_VIEW } from './config'
 import { story, photosFor, currentSegment, chapterTime } from './story'
 import { At, Box, Cyl, glowMaterial, mat } from './kit'
@@ -67,12 +67,20 @@ export function photoLayout(idx) {
     default:
       out = photos.map((p, i) => {
         const d = sizeOf(p, 1.45)
-        const side = i % 2 === 0 ? 1 : -1
-        const row = Math.floor(i / 2)
+        // corridorSide (1 or -1) puts every photo on one side, e.g. to keep the other side's scene clear
+        const side = ch.corridorSide ?? (i % 2 === 0 ? 1 : -1)
+        const row = ch.corridorSide ? i : Math.floor(i / 2)
         // Each row further back stands taller and a little wider, so it shows above the row in front.
-        const z = (ch.corridorStart ?? 1.6) + row * 2.3
-        const s = side * (1.85 + row * 0.35)
-        const hc = Math.max(1.2, d.hh / 2 + 0.5) + row * 1.15
+        // spots: [[z, s], ...] places photo i at an exact spot (e.g. either side of a house)
+        const spot = ch.spots?.[i]
+        const z0 = ch.corridorStart ?? 1.6
+        const z = spot ? spot[0] : z0 + row * 2.3
+        const s = spot ? spot[1] : side * (1.85 + row * 0.35)
+        // Back rows rise by a full photo height plus however far the planet curves away between the
+        // rows (seen from the chapter camera), so they clear the row in front instead of hiding behind it.
+        const curve = (zz) => ((zz - zc) ** 2) / (2 * R)
+        const lift = row ? row * 1.3 + curve(z) - curve(z0) : 0
+        const hc = Math.max(1.2, d.hh / 2 + 0.5) + (spot ? spot[2] ?? 0 : lift)
         return { ...d, z, s, hc, yaw: yawToward(z, s, zc, sc), kind: 'easel' }
       })
   }

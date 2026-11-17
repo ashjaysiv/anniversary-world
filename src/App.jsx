@@ -3,10 +3,12 @@ import { Canvas } from '@react-three/fiber'
 import { Planet, PathRibbon, Scatter, Clouds, Sky, Stars, Lights } from './World'
 import { Family, Footprints, Plane, Rain } from './Characters'
 import { PhotoSets } from './Photos'
+import { Town } from './Town'
 import { Scenes } from './scenes'
 import { CameraRig, useKeys } from './CameraRig'
 import { story, currentSegment } from './story'
 import { CHAPTERS } from './config'
+import { currentCue } from './audio'
 
 function Scene() {
   const planet = useRef()
@@ -19,6 +21,7 @@ function Scene() {
         <Planet />
         <PathRibbon />
         <Scatter />
+        <Town />
         <Clouds />
         <Footprints />
         <Scenes />
@@ -44,7 +47,8 @@ function Hud() {
   return (
     <div id="hud">
       {`${story.phase}${story.paused ? ' (paused)' : ''}  ch${ch.id} ${ch.name}\n`}
-      {`progress ${story.progress.toFixed(1)}°  hold ${story.holdT.toFixed(1)}s  ${seg ? seg.kind + (seg.i !== undefined ? ' ' + (seg.i + 1) : '') : ''}`}
+      {`progress ${story.progress.toFixed(1)}°  hold ${story.holdT.toFixed(1)}s  ${seg ? seg.kind + (seg.i !== undefined ? ' ' + (seg.i + 1) : '') : ''}\n`}
+      {`music ${currentCue()}`}
     </div>
   )
 }

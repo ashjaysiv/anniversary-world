@@ -7,6 +7,7 @@ import { CHAPTERS, DEFAULT_VIEW, WALK_VIEW, FLIGHT_VIEW, FINALE_VIEW } from './c
 import { story, tick, flight, currentSegment, next, prev, togglePause, restart, start, jumpTo } from './story'
 import { pal, updatePalette } from './palette'
 import { photoFocus } from './Photos'
+import { ensureAudio, updateMusic } from './audio'
 
 const V = () => new THREE.Vector3()
 
@@ -30,6 +31,7 @@ export function useKeys() {
   useEffect(() => {
     const onKey = (e) => {
       const k = e.key
+      if (story.phase !== 'loading') ensureAudio() // sound can only start from a key press
       if (k === 'f' || k === 'F') {
         if (document.fullscreenElement) document.exitFullscreen()
         else document.documentElement.requestFullscreen?.().catch(() => {})
@@ -76,6 +78,7 @@ export function CameraRig({ planet }) {
       }
     }
     tick(dt)
+    updateMusic()
     updatePalette(story.progress, story.wide * story.wideNight)
     if (planet.current) planet.current.rotation.x = -story.progress * DEG
 

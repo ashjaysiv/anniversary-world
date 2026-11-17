@@ -8,6 +8,7 @@ import { CHAPTERS } from './config'
 import { story } from './story'
 import { pal, treeGrowth } from './palette'
 import { glowMaterial } from './kit'
+import { townKeepout } from './townLayout'
 
 const COL = Object.fromEntries(Object.entries({
   deep: '#2a6597', shallow: '#4fa6c6', sand: '#ecd8a4', snow: '#eef3f8',
@@ -99,7 +100,7 @@ function genScatter() {
   const r = rng(11)
   const trees = [], rocks = [], flowers = []
   const u = new THREE.Vector3()
-  const blocked = (a, s, rad) => CHAPTERS.some((c) => angDist(a, c.angle) < 10 && Math.abs(s) < rad)
+  const blocked = (a, s, rad) => CHAPTERS.some((c) => angDist(a, c.angle) < 10 && Math.abs(s) < rad) || townKeepout(a, s)
   for (let k = 0; k < 4000 && trees.length < 560; k++) {
     const a = r() * 360
     const s = (r() < 0.5 ? -1 : 1) * (2.6 + Math.pow(r(), 1.25) * 17)

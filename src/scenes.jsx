@@ -8,6 +8,7 @@ import { story, chapterTime } from './story'
 import { pal } from './palette'
 import { At, Box, Cyl, Ball, Cone, Gable, mat, Glow, glowMaterial } from './kit'
 import { AmmaOnPhone } from './Characters'
+import { Flag } from './Flag'
 
 const HALF_PI = Math.PI / 2
 const idxOf = (id) => CHAPTERS.findIndex((c) => c.id === id)
@@ -92,6 +93,7 @@ function IndiaHouse() {
         </group>
       ))}
       <Cyl r={0.17} hgt={0.3} seg={8} c="#2f3a33" position={[-0.85, 2.38, -0.4]} />
+      <Flag kind="in" pole={1.1} size={0.62} position={[0.55, 2.22, 0.4]} rotation-y={0.8} />
       <Box s={[0.32, 0.38, 0.32]} c="#c8643c" position={[1.0, 0.33, 1.25]} />
       <Ball r={0.18} detail={0} c="#4f8c34" position={[1.0, 0.64, 1.25]} />
       <group ref={lights}>
@@ -436,6 +438,7 @@ function Apartment() {
       <Box s={[3.4, 1.45, 2.4]} c="#b9654f" position-y={2.6} />
       <Box s={[3.5, 0.1, 2.5]} c="#8e4a3a" position-y={3.37} />
       <Box s={[0.5, 0.35, 0.4]} c="#cfcfcf" position={[1.0, 3.6, -0.4]} />
+      <Flag kind="us" pole={1.05} size={0.66} position={[-1.5, 3.42, 1.0]} rotation-y={0.37} />
       {[-1.05, 0, 1.05].map((x) => (
         <group key={x} position={[x, 2.6, 1.21]}>
           <Box s={[0.55, 0.55, 0.04]} c="#f2ede4" />
@@ -652,6 +655,7 @@ function BigHouse({ boxes = false }) {
           <Box s={[0.4, 0.38, 0.03]} m={win} position-z={0.02} />
         </group>
       ))}
+      <Flag kind="us" pole={2.55} size={0.62} position={[1.42, 0.05, 1.8]} rotation-y={0.77} />
       {boxes && <MovingBoxes position={[0.4, 0, 2.3]} />}
     </group>
   )

@@ -3,12 +3,23 @@
 // Usage: npm run photos
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..')
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const list = JSON.parse(fs.readFileSync(path.join(root, 'photos.json'), 'utf8'))
 const outDir = path.join(root, 'public', 'photos')
 fs.mkdirSync(outDir, { recursive: true })
+
+// Refuse to run if any source is missing, so a wrong path never wipes the existing photos.
+const missingSrc = Object.entries(list)
+  .filter(([ch]) => /^\d+$/.test(ch))
+  .flatMap(([, files]) => files.map((e) => path.resolve(root, typeof e === 'string' ? e : e.src)))
+  .filter((p) => !fs.existsSync(p))
+if (missingSrc.length) {
+  console.error(`Stopped: ${missingSrc.length} photo(s) not found, nothing was changed:\n  ` + missingSrc.join('\n  '))
+  process.exit(1)
+}
 
 for (const f of fs.readdirSync(outDir)) {
   if (/^ch\d+-\d+\.webp$/.test(f)) fs.unlinkSync(path.join(outDir, f))
@@ -21,7 +32,9 @@ for (const [ch, files] of Object.entries(list)) {
   manifest[ch] = []
   let n = 0
   for (const entry of files) {
-    const { src, crop, rotate } = typeof entry === 'string' ? { src: entry } : entry
+    const e = typeof entry === 'string' ? { src: entry } : entry
+    const { crop, rotate } = e
+    const src = path.resolve(root, e.src) // relative paths are relative to the project folder
     if (!fs.existsSync(src)) {
       console.warn(`  missing: ${src}`)
       missing++

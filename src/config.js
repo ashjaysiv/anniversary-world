@@ -2,13 +2,16 @@
 // Camera views are [z, s, h] in path coordinates relative to the stop (see geo.js).
 // scene: seconds spent looking at the chapter's scene before the photos.
 // layout: how the chapter's photos are arranged (corridor | sky | clothesline | arc).
+// corridorSide: 1 or -1 puts all corridor photos on one side of the path.
+// spots: [[z, s, extraHeight?], ...] puts corridor photo i at an exact spot instead.
 
 export const CHAPTERS = [
   { id: 1, name: 'Two sides of the world', angle: 0, scene: 9, layout: 'sky',
     view: { pos: [-5.4, -0.6, 2.2], look: [3, 1.4, 2.0] } },
-  { id: 2, name: 'The wedding and the move', angle: 20, scene: 7, corridorStart: 3.7 },
+  { id: 2, name: 'The wedding and the move', angle: 20, scene: 7, spots: [[3.6, 3.1], [3.6, -3.1]] }, // beside the mandap, not behind its pillars
   { id: 3, name: 'The first home', angle: 88, scene: 10,
-    view: { pos: [-3.6, -1.5, 1.9], look: [1.4, 2.5, 0.95] } },
+    spots: [[2.0, -1.8], [-1.8, 3.6]], // one photo on each side of the apartment
+    view: { pos: [-5.4, -1.9, 2.3], look: [1.4, 2.3, 1.2] } },
   { id: 4, name: 'Then I came along', angle: 106, scene: 6 },
   { id: 5, name: 'The fun kid years', angle: 128, scene: 7, layout: 'clothesline' },
   { id: 6, name: 'Achoo arrives', angle: 158, scene: 7 },
