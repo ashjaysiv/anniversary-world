@@ -1,0 +1,373 @@
+{
+  "1": [
+    {
+      "src": "photos/ch1-01.webp",
+      "w": 975,
+      "h": 650
+    }
+  ],
+  "2": [
+    {
+      "src": "photos/ch2-01.webp",
+      "w": 930,
+      "h": 625
+    },
+    {
+      "src": "photos/ch2-02.webp",
+      "w": 930,
+      "h": 620
+    }
+  ],
+  "3": [],
+  "4": [
+    {
+      "src": "photos/ch4-01.webp",
+      "w": 896,
+      "h": 600
+    },
+    {
+      "src": "photos/ch4-02.webp",
+      "w": 975,
+      "h": 650
+    }
+  ],
+  "5": [
+    {
+      "src": "photos/ch5-01.webp",
+      "w": 1000,
+      "h": 660
+    },
+    {
+      "src": "photos/ch5-02.webp",
+      "w": 780,
+      "h": 525
+    },
+    {
+      "src": "photos/ch5-03.webp",
+      "w": 840,
+      "h": 570
+    }
+  ],
+  "6": [
+    {
+      "src": "photos/ch6-01.webp",
+      "w": 1600,
+      "h": 1071
+    },
+    {
+      "src": "photos/ch6-02.webp",
+      "w": 1600,
+      "h": 1071
+    },
+    {
+      "src": "photos/ch6-03.webp",
+      "w": 1600,
+      "h": 1071
+    },
+    {
+      "src": "photos/ch6-04.webp",
+      "w": 1600,
+      "h": 1071
+    }
+  ],
+  "7": [
+    {
+      "src": "photos/ch7-01.webp",
+      "w": 1600,
+      "h": 1071
+    },
+    {
+      "src": "photos/ch7-02.webp",
+      "w": 1600,
+      "h": 1071
+    }
+  ],
+  "8": [],
+  "9": [
+    {
+      "src": "photos/ch9-01.webp",
+      "w": 1024,
+      "h": 685
+    },
+    {
+      "src": "photos/ch9-02.webp",
+      "w": 1024,
+      "h": 685
+    },
+    {
+      "src": "photos/ch9-03.webp",
+      "w": 1024,
+      "h": 685
+    },
+    {
+      "src": "photos/ch9-04.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-05.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-06.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-07.webp",
+      "w": 820,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-08.webp",
+      "w": 1024,
+      "h": 682
+    },
+    {
+      "src": "photos/ch9-09.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-10.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-11.webp",
+      "w": 576,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-12.webp",
+      "w": 576,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-13.webp",
+      "w": 576,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-14.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-15.webp",
+      "w": 576,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-16.webp",
+      "w": 1024,
+      "h": 576
+    },
+    {
+      "src": "photos/ch9-17.webp",
+      "w": 499,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-18.webp",
+      "w": 499,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-19.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-20.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-21.webp",
+      "w": 499,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-22.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-23.webp",
+      "w": 1024,
+      "h": 768
+    },
+    {
+      "src": "photos/ch9-24.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-25.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-26.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-27.webp",
+      "w": 1024,
+      "h": 768
+    },
+    {
+      "src": "photos/ch9-28.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-29.webp",
+      "w": 1024,
+      "h": 768
+    },
+    {
+      "src": "photos/ch9-30.webp",
+      "w": 499,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-31.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-32.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-33.webp",
+      "w": 1024,
+      "h": 768
+    },
+    {
+      "src": "photos/ch9-34.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-35.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-36.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-37.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-38.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-39.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-40.webp",
+      "w": 498,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-41.webp",
+      "w": 1024,
+      "h": 576
+    },
+    {
+      "src": "photos/ch9-42.webp",
+      "w": 1024,
+      "h": 768
+    },
+    {
+      "src": "photos/ch9-43.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-44.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-45.webp",
+      "w": 1024,
+      "h": 499
+    },
+    {
+      "src": "photos/ch9-46.webp",
+      "w": 498,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-47.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-48.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-49.webp",
+      "w": 1024,
+      "h": 768
+    },
+    {
+      "src": "photos/ch9-50.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-51.webp",
+      "w": 576,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-52.webp",
+      "w": 576,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-53.webp",
+      "w": 1024,
+      "h": 576
+    },
+    {
+      "src": "photos/ch9-54.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-55.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-56.webp",
+      "w": 768,
+      "h": 1024
+    },
+    {
+      "src": "photos/ch9-57.webp",
+      "w": 577,
+      "h": 1024
+    }
+  ]
+}
