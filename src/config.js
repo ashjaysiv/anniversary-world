@@ -23,6 +23,8 @@ export const DEFAULT_VIEW = { pos: [-5.4, 0, 2.5], look: [3.2, 0, 0.95] }
 export const WALK_VIEW = { pos: [-4.8, 0, 2.25], look: [4.5, 0, 0.8] }
 export const FLIGHT_VIEW = { pos: [-5.4, 0, 3.9], look: [4, 0, 2.4] }
 export const FINALE_VIEW = { pos: [2.3, 0, 1.12], look: [0, 0, 0.86] }
+// On the way to the finale: up and to the side, so the camera never passes through the family.
+export const APPROACH_VIEW = { pos: [2.6, -5.5, 3.0], look: [0, 0, 0.9] }
 
 export const PHOTO_SECONDS = 4.4
 

@@ -19,7 +19,18 @@ A walk around a small planet, from the India house to the US and back, for Amma 
 | Left / PageUp | go back one chapter |
 | F | full screen on or off (Esc also leaves full screen) |
 
-With no keys pressed it plays start to finish by itself, in about 6½ minutes.
+With no keys pressed it plays start to finish by itself, in about 8½ minutes.
+
+## The message
+
+Every caption lives in `src/narration.js`:
+- `OPENING`: the lines over the turning planet after the first key press
+- `AT_STOP`: lines at each chapter, keyed by chapter number
+- `ON_WALK`: lines while walking away from a chapter
+- `VERSES`: the seven verses of the spiral, each with its moment in the scene and its camera shot
+- `FINALE`: the closing title
+
+Edit the text there and the timing adjusts itself. Each stop stays long enough for its lines to be read at a gentle pace (`WPS`, words per second). A part written as `['…', 'i']` is an italic aside that arrives after a short pause.
 
 ## Adding photos
 
@@ -38,7 +49,7 @@ Put a track at `public/audio/music.mp3` and it loops quietly under the walk.
 
 - `src/config.js`: chapter positions, camera views, seconds per scene and per photo, family colors.
 - Debug URL options: `?debug` (status overlay), `?ch=5` (jump to a chapter), `?ch=5&t=8` (seconds into it),
-  `?p=50` (freeze at a spot on the path), `?speed=10` (fast-forward).
+  `?p=50` (freeze at a spot on the path), `?speed=10` (fast-forward), `?opening` (start the opening lines right away).
 
 ## Putting it online (GitHub Pages)
 

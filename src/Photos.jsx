@@ -2,7 +2,7 @@
 import * as THREE from 'three'
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { DEG, clamp, easeOutBack, pt, facing, yawToward } from './geo'
+import { DEG, clamp, easeOutBack, pt, facing, yawToward, smoothstep } from './geo'
 import { CHAPTERS, DEFAULT_VIEW } from './config'
 import { story, photosFor, currentSegment, chapterTime } from './story'
 import { At, Box, Cyl, glowMaterial, mat } from './kit'
@@ -81,14 +81,21 @@ export function photoLayout(idx) {
 }
 
 // Camera position and look target (top frame) that fills the screen with photo i of chapter idx.
-export function photoFocus(idx, i, aspect, fov, outPos, outLook) {
+export function photoFocus(idx, i, aspect, fov, outPos, outLook, captionRoom = false) {
   const L = photoLayout(idx)[i]
   if (!L) return false
   pt(L.z, L.s, L.hc, outLook)
   const n = facing(L.z, L.s, L.yaw)
   const tanH = Math.tan((fov * DEG) / 2)
-  const dist = Math.max((L.hh + 0.3) / 0.84, (L.w + 0.2) / (0.84 * aspect)) / (2 * tanH)
+  const fill = captionRoom ? 0.66 : 0.84
+  const dist = Math.max((L.hh + 0.3) / fill, (L.w + 0.2) / (0.84 * aspect)) / (2 * tanH)
   outPos.copy(outLook).addScaledVector(n, dist)
+  if (captionRoom) {
+    // Slide the view down so the photo sits in the upper part of the screen, clear of the caption.
+    const up = outLook.clone().normalize().multiplyScalar(-0.15 * 2 * tanH * dist)
+    outPos.add(up)
+    outLook.add(up)
+  }
   return true
 }
 
@@ -97,12 +104,13 @@ function Photo({ L, tex, ch, idx, i }) {
   const v = useRef(0)
   const m = 0.06, mb = L.kind === 'hang' ? 0.17 : 0.06
   const W = L.w + 2 * m, H = L.hh + m + mb
-  const photoMat = useMemo(() => new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }), [tex])
+  const photoMat = useMemo(() => new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, transparent: true }), [tex])
   const glowMat = useMemo(() => glowMaterial('#ffe2a8', 0), [])
   const pop = useRef()
   // A soft self-glow keeps the cream frames cream in the evening light.
-  const frameMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#fbf7ee', emissive: '#fbf3e2', emissiveIntensity: 0.12, roughness: 0.8, flatShading: true }), [])
-  useFrame((_, dt) => {
+  const frameMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#fbf7ee', emissive: '#fbf3e2', emissiveIntensity: 0.12, roughness: 0.8, flatShading: true, transparent: true }), [])
+  const wp = useMemo(() => new THREE.Vector3(), [])
+  useFrame((state, dt) => {
     frameMat.emissiveIntensity = 0.12 + pal.night * 0.5
     // Floating photos drift away once their part of the story is over (they'd hang over the ending otherwise).
     const gone = L.kind === 'float' && story.progress > ch.angle + 40
@@ -118,7 +126,11 @@ function Photo({ L, tex, ch, idx, i }) {
     else pop.current.scale.setScalar(sc)
     const seg = currentSegment()
     const focused = seg && story.idx === idx && seg.kind === 'photo' && seg.i === i ? 1 : 0
-    glowMat.opacity = Math.sin(e * Math.PI) * 0.9 + e * (0.16 + focused * 0.22)
+    // When the camera flies past a photo (in and out of the tower), the photo fades instead of flashing.
+    pop.current.getWorldPosition(wp)
+    const near = smoothstep(0.45, 1.15, wp.distanceTo(state.camera.position))
+    photoMat.opacity = frameMat.opacity = near
+    glowMat.opacity = (Math.sin(e * Math.PI) * 0.9 + e * (0.16 + focused * 0.22)) * near
     const t = story.time + i * 1.7
     if (L.kind === 'float') inner.current.position.y = L.hc + Math.sin(t * 0.9) * 0.08
     if (L.kind === 'hang') inner.current.rotation.z = Math.sin(t * 1.2) * 0.05

@@ -8,6 +8,12 @@ import { story, chapterTime } from './story'
 import { pal } from './palette'
 import { At, Box, Cyl, Ball, Cone, Gable, mat, Glow, glowMaterial } from './kit'
 import { AmmaOnPhone } from './Characters'
+import { beatTime } from './narration'
+import { SpiralMoments, lanternFlare } from './spiral'
+
+// Moments in chapter 1 start with the caption that describes them.
+const COINS_AT = beatTime(1, 'coins') - 0.3
+const RINGS_AT = beatTime(1, 'rings') + 0.3
 
 const HALF_PI = Math.PI / 2
 const idxOf = (id) => CHAPTERS.findIndex((c) => c.id === id)
@@ -57,7 +63,9 @@ function Palm({ ...p }) {
 // ================= Chapter 1 & 9: the India house =================
 function IndiaHouse() {
   const lit = (p) => smoothstep(330, 350, p) * 2.4
-  const win = useWindowMat((p) => lit(p) + (p < 12 ? 0.5 : 0))
+  // In the 'not easy' verse the house goes dark except one window: working late into the night.
+  const win = useWindowMat((p) => (lit(p) + (p < 12 ? 0.5 : 0)) * (1 - story.dim * 0.92) - story.dim * pal.night * 1.3)
+  const late = useWindowMat((p) => lit(p) + story.dim * 2.6)
   const lights = useRef()
   const bulbs = useMemo(() => {
     const out = []
@@ -88,7 +96,7 @@ function IndiaHouse() {
       {[[-0.68, 0.7, 0.96], [-0.68, 1.68, 0.74], [0.42, 1.68, 0.74]].map((q, i) => (
         <group key={i} position={q}>
           <Box s={[0.5, 0.42, 0.05]} c="#c8643c" />
-          <Box s={[0.4, 0.33, 0.03]} m={win} position-z={0.02} />
+          <Box s={[0.4, 0.33, 0.03]} m={i === 2 ? late : win} position-z={0.02} />
         </group>
       ))}
       <Cyl r={0.17} hgt={0.3} seg={8} c="#2f3a33" position={[-0.85, 2.38, -0.4]} />
@@ -156,7 +164,7 @@ function PhoneTable() {
   const table = useRef()
   useFrame(() => {
     const t = chapterTime(0)
-    const n = t > 100 ? 14 : Math.min(14, Math.floor(Math.max(0, t - 1.2) * 1.8))
+    const n = t > 100 ? 14 : Math.min(14, Math.floor(Math.max(0, t - COINS_AT) * 1.8))
     coins.current.forEach((c, i) => c && (c.visible = i < n))
     table.current.visible = story.progress < 300
   })
@@ -202,8 +210,8 @@ function PhoneArc() {
       s.position.copy(curve.getPoint(i % 2 ? u : grow - u, tmp))
       s.material.opacity = 0.85 * fade * (grow > 0.02 ? 1 : 0)
     })
-    const rt = t0 > 100 ? 1 : smoothstep(3.6, 7.6, t0)
-    rings.current.visible = t0 > 3.6 && fade > 0.01 && story.progress < 300
+    const rt = t0 > 100 ? 1 : smoothstep(RINGS_AT, RINGS_AT + 4, t0)
+    rings.current.visible = t0 > RINGS_AT && fade > 0.01 && story.progress < 300
     if (rings.current.visible) {
       curve.getPoint(lerp(0.32, 0.03, rt), rings.current.position)
       rings.current.position.y += 0.35 * rt
@@ -272,13 +280,18 @@ function SkyLanterns() {
   const body = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffcf8a', emissive: '#ff9a3c', emissiveIntensity: 1.6, flatShading: true, toneMapped: false }), [])
   useFrame(() => {
     const t = chapterTime(idxOf(9))
+    const flare = lanternFlare()
+    body.emissiveIntensity = 1.6 + flare * 2.4
+    glowMat.opacity = 0.9 * (1 + flare * 0.6)
     items.forEach((it, i) => {
       const g = refs.current[i]
       if (!g) return
       const u = t > 500 ? -1 : t - it.start
       g.visible = u > 0 && story.progress > 340
       if (!g.visible) return
-      const y = 0.4 + u * it.sp + Math.min(u, 2) * 0.1
+      // They rise, then gather into a glowing canopy high above the tower.
+      const H = 12 + it.ph * 1.2
+      const y = 0.4 + H * (1 - Math.exp((-u * it.sp) / H)) + Math.min(u, 2) * 0.1
       g.position.set(it.x + Math.sin(u * 0.4 + it.ph) * 0.4, y, it.z + u * 0.05)
       g.scale.setScalar(smoothstep(0, 1.2, u))
     })
@@ -296,9 +309,18 @@ function SkyLanterns() {
 }
 
 function HomeGlow() {
-  const ref = useRef()
-  useFrame(() => (ref.current.intensity = smoothstep(338, 352, story.progress) * 3.2))
-  return <pointLight ref={ref} position={[0, 1.1, 1.3]} color="#ffb070" distance={6} decay={1.4} />
+  const ref = useRef(), front = useRef()
+  useFrame(() => {
+    const on = smoothstep(338, 352, story.progress)
+    ref.current.intensity = on * 3.2
+    front.current.intensity = on * 2.4 // a warm fill from the other side, so faces aren't in shadow
+  })
+  return (
+    <>
+      <pointLight ref={ref} position={[0, 1.1, 1.3]} color="#ffb070" distance={6} decay={1.4} />
+      <pointLight ref={front} position={[0.3, 1.5, -1.8]} color="#ffc488" distance={6} decay={1.4} />
+    </>
+  )
 }
 
 function IndiaHome() {
@@ -309,13 +331,14 @@ function IndiaHome() {
       <At z={-0.2} s={4.6}><Palm rotation-y={0.4} /></At>
       <At z={5.4} s={3.6}><Palm rotation-y={2.2} scale={0.9} /></At>
       <At z={6.0} s={-5.7}><Palm rotation-y={4} scale={1.05} /></At>
-      <At z={-2.4} s={-3.2}><Palm rotation-y={1} scale={0.85} /></At>
+      <At z={-3.9} s={-4.8}><Palm rotation-y={1} scale={0.85} /></At>
       <At z={2.55} s={1.85} yaw={HALF_PI + 0.3}><Kolam /><Rangoli /></At>
       <At z={1.0} s={1.55} yaw={ammaYaw}><AmmaOnPhone /></At>
       <At z={0.55} s={1.05} yaw={ammaYaw}><PhoneTable /></At>
       <PhoneArc />
       <Diyas />
       <At z={0} s={0}><SkyLanterns /><HomeGlow /></At>
+      <SpiralMoments />
     </group>
   )
 }

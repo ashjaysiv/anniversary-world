@@ -2,9 +2,10 @@
 import * as THREE from 'three'
 import { useEffect, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { DEG, lerp, pt } from './geo'
-import { CHAPTERS, DEFAULT_VIEW, WALK_VIEW, FLIGHT_VIEW, FINALE_VIEW } from './config'
-import { story, tick, flight, currentSegment, next, prev, togglePause, restart, start, jumpTo } from './story'
+import { DEG, lerp, pt, bump } from './geo'
+import { CHAPTERS, DEFAULT_VIEW, WALK_VIEW, FLIGHT_VIEW, FINALE_VIEW, APPROACH_VIEW } from './config'
+import { story, tick, flight, currentSegment, verseInfo, next, prev, togglePause, restart, start, jumpTo } from './story'
+import { VERSES } from './narration'
 import { pal, updatePalette } from './palette'
 import { photoFocus } from './Photos'
 
@@ -69,6 +70,7 @@ export function CameraRig({ planet }) {
         story.holdT = parseFloat(q.get('t')) || 0
       }
       // ?p=deg freezes the walk at a spot on the path (for checking scenery)
+      if (q.has('opening')) start()
       const p = parseFloat(q.get('p'))
       if (!Number.isNaN(p)) {
         jumpTo(0)
@@ -76,7 +78,11 @@ export function CameraRig({ planet }) {
       }
     }
     tick(dt)
-    updatePalette(story.progress, story.wide * story.wideNight)
+    // The 'not easy' verse darkens the evening into deep night for its whole length.
+    const ne = verseInfo(VERSES.findIndex((v) => v.key === 'noteasy'))
+    const dimTarget = ne.t >= 0 ? bump(ne.t, 0.2, 2.5, ne.dur - 1.5, ne.dur + 0.5) : 0
+    story.dim += (dimTarget - story.dim) * (1 - Math.exp(-dt * 3))
+    updatePalette(story.progress, Math.max(story.wide * story.wideNight, story.dim * 0.8))
     if (planet.current) planet.current.rotation.x = -story.progress * DEG
 
     // where the close-up camera wants to be
@@ -93,11 +99,12 @@ export function CameraRig({ planet }) {
       k = story.fast ? 3 : 1.6
       story.face = null
     } else {
-      const view = seg?.kind === 'finale' ? FINALE_VIEW : ch.view ?? DEFAULT_VIEW
+      const view = seg?.kind === 'finale' ? FINALE_VIEW : seg?.approach ? APPROACH_VIEW : seg?.kind === 'verse' ? VERSES[seg.v].view : ch.view ?? DEFAULT_VIEW
       poseOf(view, s.tPos, s.tLook)
       story.face = view.pos
       if (seg?.kind === 'photo') {
-        if (photoFocus(story.idx, seg.i, camera.aspect, camera.fov, s.aPos, s.aLook)) {
+        // In the spiral a caption sits under each photo, so frame the photo a little smaller and higher.
+        if (photoFocus(story.idx, seg.i, camera.aspect, camera.fov, s.aPos, s.aLook, ch.layout === 'helix')) {
           s.tPos.copy(s.aPos)
           s.tLook.copy(s.aLook)
           s.tUp.copy(s.aLook).normalize() // photos stand upright on the curved ground
@@ -105,6 +112,7 @@ export function CameraRig({ planet }) {
         k = (ch.photoSec ?? 4.4) < 3.5 ? 2.8 : 1.5 // quick slideshows settle faster
       }
       if (seg?.kind === 'finale') k = 0.7
+      if (seg?.kind === 'verse') k = 1.7
     }
     if (!s.init) { s.pos.copy(s.tPos); s.look.copy(s.tLook); s.init = true }
     const a = 1 - Math.exp(-dt * k)

@@ -7,7 +7,22 @@
     <link rel="icon" href="data:," />
     <style>
       html, body, #root { margin: 0; height: 100%; background: #0d1433; overflow: hidden; cursor: none; }
-      #hud { position: fixed; left: 12px; top: 10px; font: 13px/1.4 monospace; color: #fff; background: rgba(0,0,0,.45); padding: 6px 10px; border-radius: 6px; pointer-events: none; white-space: pre; }
+      #hud { position: fixed; left: 12px; top: 10px; font: 13px/1.4 monospace; color: #fff; background: rgba(0,0,0,.45); padding: 6px 10px; border-radius: 6px; pointer-events: none; white-space: pre; z-index: 10; }
+      .captions { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+      .cap-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 40%; opacity: 0; transition: opacity 1.4s ease;
+        background: linear-gradient(to top, rgba(12, 9, 24, 0.66) 0%, rgba(12, 9, 24, 0.38) 45%, rgba(12, 9, 24, 0) 100%); }
+      .cap-fade.on { opacity: 1; }
+      .cap { position: absolute; left: 50%; transform: translateX(-50%); width: min(72vw, 1500px); text-align: center;
+        color: #fff8ec; transition: opacity 0.9s ease; }
+      .cap.line { bottom: 7.5vh; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 3.35vw; line-height: 1.22;
+        text-shadow: 0 0 22px rgba(255, 196, 120, 0.42), 0 2px 7px rgba(0, 0, 0, 0.6); }
+      .cap.title { top: 9vh; font-family: 'Dancing Script', cursive; font-weight: 700; font-size: 5.6vw; line-height: 1.15;
+        color: #ffe9c2; text-shadow: 0 0 30px rgba(255, 170, 90, 0.65), 0 3px 10px rgba(0, 0, 0, 0.55); }
+      .cap .w { display: inline-block; opacity: 0; transform: translateY(0.28em); filter: blur(3px); animation: wIn 1.1s ease forwards; }
+      .cap .w.i { font-style: italic; font-weight: 500; color: #ffdcaa; }
+      .cap.out { opacity: 0; }
+      .captions.paused .w { animation-play-state: paused; }
+      @keyframes wIn { to { opacity: 1; transform: none; filter: none; } }
     </style>
   </head>
   <body>

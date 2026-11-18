@@ -7,6 +7,7 @@ import { Scenes } from './scenes'
 import { CameraRig, useKeys } from './CameraRig'
 import { story, currentSegment } from './story'
 import { CHAPTERS } from './config'
+import { Captions } from './Captions'
 
 function Scene() {
   const planet = useRef()
@@ -41,10 +42,11 @@ function Hud() {
   }, [])
   const seg = currentSegment()
   const ch = CHAPTERS[story.idx]
+  const v = seg?.v !== undefined ? ` v${seg.v + 1}` : ''
   return (
     <div id="hud">
       {`${story.phase}${story.paused ? ' (paused)' : ''}  ch${ch.id} ${ch.name}\n`}
-      {`progress ${story.progress.toFixed(1)}°  hold ${story.holdT.toFixed(1)}s  ${seg ? seg.kind + (seg.i !== undefined ? ' ' + (seg.i + 1) : '') : ''}`}
+      {`progress ${story.progress.toFixed(1)}°  hold ${story.holdT.toFixed(1)}s  ${seg ? seg.kind + (seg.i !== undefined ? ' ' + (seg.i + 1) : '') + v : ''}`}
     </div>
   )
 }
@@ -62,6 +64,7 @@ export default function App() {
       >
         <Scene />
       </Canvas>
+      <Captions />
       {debug && <Hud />}
     </>
   )

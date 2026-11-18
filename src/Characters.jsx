@@ -6,6 +6,7 @@ import { R, DEG, clamp, lerp, smoothstep, bump, pt, zOf, pathMatrix, OCEANS, rng
 import { FAMILY, ORDER, FINALE_ORDER, formation, curve, CHAPTERS } from './config'
 import { story, boarded, flight, chapterTime, currentSegment } from './story'
 import { Box, Cyl, Ball, Cone, mat, Glow, Limb } from './kit'
+import { umbrellaJoke, stoodFactor } from './spiral'
 
 // ---------- figures (local space: faces +Z, feet at y=0) ----------
 function Arm({ side, y, color, skin, len = 0.36, armRef }) {
@@ -175,7 +176,8 @@ export function Family() {
       const scale = st.v * (1 - board) * growth(k, p)
       g.visible = scale > 0.01
       g.scale.setScalar(Math.max(scale, 0.0001))
-      if (form[k] !== undefined) st.x += (form[k] - st.x) * (1 - Math.exp(-dt * 3))
+      // "You stood by us": everyone draws in close together.
+      if (form[k] !== undefined) st.x += (form[k] * (1 - 0.3 * stoodFactor()) - st.x) * (1 - Math.exp(-dt * 3))
       g.position.set(st.x, R + 0.066, 0)
       let targetYaw = dir < 0 ? Math.PI : 0
       if (!walking && face) targetYaw = Math.atan2(-face[1] - st.x, face[0])
@@ -253,7 +255,7 @@ export function Footprints() {
     let lo = 0, hi = prints.length
     while (lo < hi) { const mid = (lo + hi) >> 1; if (prints[mid].a < lim) lo = mid + 1; else hi = mid }
     ref.current.count = lo
-    const glow = story.phase === 'outro' || story.phase === 'end' ? smoothstep(0.15, 0.8, story.wide) : 0
+    const glow = Math.max(story.phase === 'outro' || story.phase === 'end' ? smoothstep(0.15, 0.8, story.wide) : 0, stoodFactor())
     material.color.lerpColors(base, gold, glow)
     material.opacity = 0.55 + glow * 0.4
   })
@@ -308,7 +310,7 @@ export const rainAmount = () => {
 function Umbrella() {
   const ref = useRef()
   useFrame(() => {
-    const r = rainAmount()
+    const r = Math.max(rainAmount(), umbrellaJoke())
     ref.current.visible = r > 0.01
     ref.current.scale.setScalar(Math.max(r, 0.001))
     ref.current.position.set(0, R + 0.066, 0.05)
