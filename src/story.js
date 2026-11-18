@@ -1,7 +1,7 @@
 // The story timeline: one mutable object, advanced every frame by tick().
 import { CHAPTERS, PHOTO_SECONDS } from './config'
 import { clamp, easeInOut, bump } from './geo'
-import { startMusic, fadeMusic } from './audio'
+// Music follows this state on its own (audio.js reads it every frame).
 import { OPENING, AT_STOP, VERSES, FINALE, schedule, scheduleEnd, readTime } from './narration'
 
 export const story = {
@@ -137,7 +137,6 @@ export function start() {
   story.progress = 0
   story.idx = 0
   story.wideNight = 1
-  startMusic()
   const el = document.documentElement
   if (!document.fullscreenElement && el.requestFullscreen) el.requestFullscreen().catch(() => {})
 }
@@ -176,7 +175,6 @@ export function prev() {
       setWide(0, 3)
       story.phase = 'hold'
       story.holdT = 0
-      fadeMusic(0.55, 2)
       return
   }
 }
@@ -201,7 +199,6 @@ function beginOutro() {
   story.phase = 'outro'
   story.wideNight = 0.7
   setWide(1, 9)
-  fadeMusic(0.25, 9)
 }
 
 export function tick(dt) {

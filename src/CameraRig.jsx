@@ -8,6 +8,7 @@ import { story, tick, flight, currentSegment, verseInfo, next, prev, togglePause
 import { VERSES } from './narration'
 import { pal, updatePalette } from './palette'
 import { photoFocus } from './Photos'
+import { ensureAudio, updateMusic } from './audio'
 
 const V = () => new THREE.Vector3()
 
@@ -31,6 +32,7 @@ export function useKeys() {
   useEffect(() => {
     const onKey = (e) => {
       const k = e.key
+      if (story.phase !== 'loading') ensureAudio() // sound can only start from a key press
       if (k === 'f' || k === 'F') {
         if (document.fullscreenElement) document.exitFullscreen()
         else document.documentElement.requestFullscreen?.().catch(() => {})
@@ -82,6 +84,7 @@ export function CameraRig({ planet }) {
     const ne = verseInfo(VERSES.findIndex((v) => v.key === 'noteasy'))
     const dimTarget = ne.t >= 0 ? bump(ne.t, 0.2, 2.5, ne.dur - 1.5, ne.dur + 0.5) : 0
     story.dim += (dimTarget - story.dim) * (1 - Math.exp(-dt * 3))
+    updateMusic()
     updatePalette(story.progress, Math.max(story.wide * story.wideNight, story.dim * 0.8))
     if (planet.current) planet.current.rotation.x = -story.progress * DEG
 
